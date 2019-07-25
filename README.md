@@ -1,1 +1,1 @@
-# azure-cli-helm-kuberctl-hyperledger
+# azure-cli-helm-kubectl-hyperledger
