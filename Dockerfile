@@ -5,10 +5,13 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 ENV AZURE_CLI_VERSION "0.10.17"
 ENV NODEJS_APT_ROOT "node_6.x"
 ENV NODEJS_VERSION "6.11.3"
+ARG HLF_VERSION
 
 EXPOSE 8001
 LABEL name=kubernetes-hyperledger-az-manager version=dev \
       maintainer="Marcos Rachid <marcosrachid@gmail.com>" 
+
+RUN echo ${HLF_VERSION}
 
 RUN apt-get update -qq && \
     apt-get install -qqy --no-install-recommends\
@@ -54,10 +57,9 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
 RUN curl -L https://git.io/get_helm.sh | bash
 
 # cryptogen binaries
-COPY init.sh /
-RUN chmod +x init.sh && \
-    ./init.sh -d && \
-    rm -f init.sh
-ENV PATH="/fabric-samples/bin:${PATH}"
+COPY init.sh /fabric/
+RUN chmod +x /fabric/init.sh && \
+    /fabric/init.sh $HLF_VERSION -sd && \
+    rm -f /fabric
 
 ENV EDITOR vim
