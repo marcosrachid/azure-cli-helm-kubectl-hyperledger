@@ -11,10 +11,8 @@ EXPOSE 8001
 LABEL name=kubernetes-hyperledger-az-manager version=dev \
       maintainer="Marcos Rachid <marcosrachid@gmail.com>" 
 
-RUN echo ${HLF_VERSION}
-
 RUN apt-get update -qq && \
-    apt-get install -qqy --no-install-recommends\
+    apt-get install -qqy --no-install-recommends \
       apt-transport-https \
       build-essential \
       curl \
@@ -31,22 +29,25 @@ RUN apt-get update -qq && \
       jq \
       software-properties-common
 
-# azure-cli
+# repo azure-cli
 RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
       gpg --dearmor | \
       tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null && \
     AZ_REPO=$(lsb_release -cs) && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
-      tee /etc/apt/sources.list.d/azure-cli.list && \
-    apt-get update && apt-get install -y azure-cli
+      tee /etc/apt/sources.list.d/azure-cli.list
 
-# docker
+# repo docker
 RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg > /tmp/dkey; apt-key add /tmp/dkey && \
     add-apt-repository \
       "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
       $(lsb_release -cs) \
-      stable" && \
-    apt-get update && \
-    apt-get -y install docker-ce
+      stable"
+
+# docker and az
+RUN apt-get update -qq && \
+    apt-get install -qqy --no-install-recommends \
+      docker-ce \
+      azure-cli
 
 # kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
