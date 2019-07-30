@@ -37,11 +37,6 @@ RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
       tee /etc/apt/sources.list.d/azure-cli.list && \
     apt-get update && apt-get install -y azure-cli
 
-RUN apt-get update -qq && \
-    apt-get install -qqy --no-install-recommends \
-      docker-ce \
-      azure-cli
-
 # kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
       chmod +x ./kubectl && \
@@ -51,9 +46,9 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
 RUN curl -L https://git.io/get_helm.sh | bash
 
 # cryptogen binaries
-COPY init.sh /fabric/
-RUN chmod +x /fabric/init.sh && \
-    /fabric/init.sh $HLF_VERSION -sd && \
-    rm -f /fabric
+COPY init.sh /
+RUN chmod +x init.sh && \
+    ./init.sh $HLF_VERSION -sd && \
+    rm -f init.sh
 
 ENV EDITOR vim
