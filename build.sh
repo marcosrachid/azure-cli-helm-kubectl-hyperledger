@@ -14,7 +14,7 @@ if [[ $VERSION =~ ^[1-9][0-9]*\.[0-9]+\.[0-9]+ ]]; then
     HLF_VERSION=$VERSION;
     echo "Custom Version is valid";
 else
-    echo "Custom Version is invalid. Taking Custom version: " $HLF_VERSION;
+    echo "Custom Version is empty or invalid. Taking Custom version: " $HLF_VERSION;
 fi
 
 curl -sSL http://bit.ly/2ysbOFE > init.sh && chmod +x init.sh
