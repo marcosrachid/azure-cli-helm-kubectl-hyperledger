@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # if version not passed in, default to latest released version
-HLF_VERSION=1.4.2
+HLF_VERSION=1.3.0
 
 # Parse commandline args pull out
 # version and/or ca-version strings first
@@ -11,15 +11,19 @@ if [ -n "$1" ]; then
 fi
 
 if [[ $VERSION =~ ^[1-9][0-9]*\.[0-9]+\.[0-9]+ ]]; then
-    HLF_VERSION=$VERSION;
     echo "Custom Version is valid";
+    if [ $HLF_VERSION != $VERSION ]; then
+        HLF_VERSION=$VERSION;
+        curl -sSL http://bit.ly/2ysbOFE > init.sh && chmod +x init.sh && ./init.sh $HLF_VERSION -sd && chmod +x bin/*
+        rm -f init.sh
+    else
+        cp bin-dist bin
+    fi
 else
     echo "Custom Version is empty or invalid. Taking Custom version: " $HLF_VERSION;
+    cp bin-dist bin
 fi
 
-curl -sSL http://bit.ly/2ysbOFE > init.sh && chmod +x init.sh
-[ -s ./init.sh ] || cp init_dist.sh init.sh && chmod +x init.sh;
+docker build . -t kubernetes-hyperledger-az-manager
 
-docker build .  --build-arg HLF_VERSION=$HLF_VERSION -t kubernetes-hyperledger-az-manager
-
-rm -f init.sh
+rm -rf bin
