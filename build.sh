@@ -17,13 +17,11 @@ if [[ $VERSION =~ ^[1-9][0-9]*\.[0-9]+\.[0-9]+ ]]; then
         curl -sSL http://bit.ly/2ysbOFE > init.sh && chmod +x init.sh && ./init.sh $HLF_VERSION -sd && chmod +x bin/*
         rm -f init.sh
     else
-        cp bin-dist bin
+        cp -r bin-dist bin
     fi
 else
     echo "Custom Version is empty or invalid. Taking Custom version: " $HLF_VERSION;
-    cp bin-dist bin
+    cp -r bin-dist bin
 fi
 
 docker build . -t kubernetes-hyperledger-az-manager
-
-rm -rf bin
