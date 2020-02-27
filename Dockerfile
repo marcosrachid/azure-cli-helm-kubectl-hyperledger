@@ -17,6 +17,7 @@ RUN apt-get update -qq && \
       curl \
       ca-certificates \
       apt-transport-https \
+      gettext-base \
       git \
       lsb-release \
       gnupg \
